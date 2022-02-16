@@ -5,7 +5,7 @@
 // Quiz = require('module/classQuiz.js');
 
 
-const url = 'https://opentdb.com/api.php?amount=20&category=9&type=multiple';
+const url = 'https://opentdb.com/api.php?amount=10&category=9&type=multiple';
 
 
 const quizArray = new Array();
@@ -28,26 +28,36 @@ async function startQuiz() {
     data.results.forEach(element => {
         quizArray.push(element);
     });
+    console.log(quizArray);
     createHtmlQuestion();
     createQuiz(quizArray[0]);
     quizArray.shift();
     nextBtn.addEventListener('click', () => {
         // if all questions left put restart
         if(quizArray.length == 0){
+            let x = document.getElementById('main').style.background;
+            if(x == 'rgb(53, 170, 49)'){
+                countGood += 1;
+                console.log(countGood);
+            }  
             console.log(countGood);
             result.classList.remove('hide');
             result.innerHTML = '';
             result.appendChild(document.createTextNode('Resultat : '+countGood+' / 10'));
             // message selon le resultat
             resultMsg();
+            //
+        
             // on switch l'affichage des boutons 
             resetBtn.classList.remove('hide');
             nextBtn.classList.add('hide');
             //changement du background color
-            document.getElementById('main').setAttribute('style', 'background: rgb(53, 109, 182);');
+            setTimeout(document.getElementById('main').setAttribute('style', 'background: rgb(53, 109, 182);'), 3000);
         } else {
             // else do next question && re enable buttons
             enableButtons();
+            nextBtn.disabled = true;
+            console.log(quizArray);
             // counter
             let x = document.getElementById('main').style.background;
             console.log(x);
@@ -60,9 +70,8 @@ async function startQuiz() {
             createHtmlQuestion();
             createQuiz(quizArray[0]);
             quizArray.shift();
-            document.getElementById('main').setAttribute('style', 'background: rgb(53, 109, 182);');  
-            // let x = document.getElementById('main').style.background;
-            
+            setTimeout(document.getElementById('main').setAttribute('style', 'background: rgb(53, 109, 182);'), 3000);  
+            // let x = document.getElementById('main').style.background;            
         }
     })
     // if(quizArray[0] == undefined){
@@ -97,29 +106,33 @@ function createQuiz(param) {
 function decode_utf8(s) {
     return decodeURIComponent(escape(s));
   }
-
+  function escapeHtml(text) {
+    return text.replaceAll("&amp;", '"').replaceAll("&lt;", '"').replaceAll("&gt;", '"').replaceAll("&quot;", '"').replaceAll("&#039;", '"');
+  }
 
 function createQuestion(data) {
     console.log(data);
     const right = document.getElementById('right');
-    right.innerText = "Good answer : " + data.correct_answer;
+    right.innerText = "Good answer : " + escapeHtml(data.correct_answer);
     right.setAttribute('class', 'hide');
     // for (const [key, value] of Object.entries(data)) {
     for (const values in data){
         console.log(values)
         if (values == 'category') {
             const cat = document.getElementById('category');
-            cat.innerText = data.category;
+            cat.innerText = escapeHtml(data.category);
         }
         if (values == 'question') {
             const question = document.getElementById('question');
-            question.innerText = decode_utf8(data.question);
+            let texted = escapeHtml(data.question);
+                // .replaceAll("&quot;", '"').replaceAll("&#039;", "'");
+            question.innerText = texted;
             // /data.question;
            
         }
         if (values == 'correct_answer') {
             const corrects = document.getElementById('correct');
-            corrects.innerText = data.correct_answer;
+            corrects.innerText = escapeHtml(data.correct_answer);
             corrects.addEventListener('click', () => {
                     document.getElementById('main').setAttribute('style', 'background: rgb(53, 170, 49);;');
                     showAnswer(right);
@@ -127,13 +140,15 @@ function createQuestion(data) {
                     nextBtn.classList.remove('hide');
                     document.getElementById('main').dataset = 'correct';
                     setBtnColors();
+                    nextBtn.disabled = false;
             })
         }
 
         if (values == 'incorrect_answers') {
             for(i = 0; i < data.incorrect_answers.length; i++){
                 const falseAnswer = document.getElementById('false'.concat(i));
-                falseAnswer.innerText = data.incorrect_answers[i];
+                falseAnswer.innerText = escapeHtml(data.incorrect_answers[i]);
+                //  decode_utf8(data.incorrect_answers[i]).replaceAll("&quot;", '"').replaceAll("&#039;", "'");
                 falseAnswer.addEventListener('click', () => {
                     document.getElementById('main').setAttribute('style', 'background: rgb(156, 39, 39);');
                     showAnswer(right);
@@ -141,6 +156,7 @@ function createQuestion(data) {
                     nextBtn.classList.remove('hide');
                     document.getElementById('main').dataset = 'false';
                     setBtnColors();
+                    nextBtn.disabled = false;
              })
             }
         }
@@ -221,25 +237,25 @@ function enableButtons(){
 }
 
 function resultMsg(){
-    if(countGood == 20){
-       return quizContainer.innerHTML = `<img src='https://st2.depositphotos.com/4071863/5889/v/950/depositphotos_58896203-stock-illustration-congratulations-typography-lettering-text-card.jpg' class='image'>
+    if(countGood == 10){
+       return quizContainer.innerHTML = `<img src='https://media3.giphy.com/media/W0cDzGKbC1Oh3NqlgX/giphy.gif' class='image'>
                                     <h4 class="done">WELL DONE ! YOU\'RE A BEAST !!!</h4>`;
     }
-    if(countGood >= 15 && countGood < 20){
-        return quizContainer.innerHTML = `<img src='https://st2.depositphotos.com/4071863/5889/v/950/depositphotos_58896203-stock-illustration-congratulations-typography-lettering-text-card.jpg' class='image'>
+    if(countGood >= 7 && countGood < 10){
+        return quizContainer.innerHTML = `<img src='https://media3.giphy.com/media/l2SpMbZ3PlhSVjinK/giphy.gif' class='image'>
                                      <h4 class="done"> Wow you're pretty good! Well done but not perfect yet !</h4>`;
     }
-    if(countGood >= 10 && countGood < 15){
-       return quizContainer.innerHTML = `<img src='https://st2.depositphotos.com/4071863/5889/v/950/depositphotos_58896203-stock-illustration-congratulations-typography-lettering-text-card.jpg' class='image'>
+    if(countGood >= 5 && countGood < 7){
+       return quizContainer.innerHTML = `<img src='https://media2.giphy.com/media/xTiQyBOIQe5cgiyUPS/giphy.gif' class='image'>
                                     <h4 class="done">Not bad! You can do better I am sure of it !</h4>`;
     }
-    if(countGood < 10 && countGood <= 5){
-        return quizContainer.innerHTML = `<img src='https://st2.depositphotos.com/4071863/5889/v/950/depositphotos_58896203-stock-illustration-congratulations-typography-lettering-text-card.jpg' class='image'>
+    if(countGood >= 2 && countGood < 5){
+        return quizContainer.innerHTML = `<img src='https://c.tenor.com/deuc0xOE2FwAAAAM/you-can-do-better-than-that-preston-horace.gif' class='image'>
                                     <h4 class="done">Eww that was bad bruh !</h4>`;
     }
-    if(countGood > 10 && countGood < 15){
-       return quizContainer.innerHTML = `<img src='https://st2.depositphotos.com/4071863/5889/v/950/depositphotos_58896203-stock-illustration-congratulations-typography-lettering-text-card.jpg' class='image'>
-                                    <h4 class="done">DONE ! Here is your result!</h4>`;
+    if(countGood >= 0 && countGood < 2){
+       return quizContainer.innerHTML = `<img src='https://th.bing.com/th/id/OIP.IkbLe7M7KeS_KuOQTEhAcwHaHa?pid=ImgDet&rs=1' class='image'>
+                                    <h4 class="done"> Comon dude, you could at least score 1 point ! ! !</h4>`;
     }
 }
 

@@ -5,12 +5,18 @@
     font-family: 'Roboto Condensed', sans-serif;
 
 }
+
+#main{
+    transition: 0.7s;
+}
 .container-main{
     display: flex;
     flex-direction: column;
     height: 100vh;
     width: 100vw;
-    background: black; 
+    background: url(https://airwallpaper.com/wp-content/uploads/wall003/Abstract-Starry-Backgrounds-scaled.jpg); 
+    background-repeat: no-repeat;
+    background-size: cover;
     justify-content: center;
     align-items: center;
     /* padding:40%; */
@@ -87,16 +93,18 @@
 #result{
     color: aliceblue;
 }
+#done{
+    font-size: 1.5em;
+}
 
 
 /* buttons */
 
-#start-btn{
+/* #start-btn{
     display: flex;
     justify-content: center;
     font-size: 1.5em;
     align-items: center;
-    /* text-shadow: 0px 0px 5px rgb(252, 252, 252); */
     color: rgb(95, 124, 161);
     background-color:black ;
     border: 1px gray ridge;
@@ -108,14 +116,31 @@
     border-bottom: 10px gray inset;
     border-left: 5px gray inset;
     transition: 0.5s;
-}
+} */
 
-#next-btn{
+#next-btn, #restart-btn, #start-btn{
     display: flex;
     justify-content: center;
     font-size: 1.5em;
     align-items: center;
     /* text-shadow: 0px 0px 5px rgb(252, 252, 252); */
+    color: rgb(95, 124, 161);
+    background-color:aliceblue ;
+    border: 1px gray ridge;
+    border-top-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 5%; 
+    width: 15%; 
+    transform: perspective(50em) rotateX(35deg);
+    border-bottom: 10px gray inset;
+    border-left: 5px gray inset;
+    transition: 0.5s;
+}
+/* #restart-btn{
+    display: flex;
+    justify-content: center;
+    font-size: 1.5em;
+    align-items: center;
     color: rgb(95, 124, 161);
     background-color:black ;
     border: 1px gray ridge;
@@ -127,25 +152,7 @@
     border-bottom: 10px gray inset;
     border-left: 5px gray inset;
     transition: 0.5s;
-}
-#restart-btn{
-    display: flex;
-    justify-content: center;
-    font-size: 1.5em;
-    align-items: center;
-    /* text-shadow: 0px 0px 5px rgb(252, 252, 252); */
-    color: rgb(95, 124, 161);
-    background-color:black ;
-    border: 1px gray ridge;
-    border-top-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    padding: 5%; 
-    width: 15%; 
-    transform: perspective(50em) rotateX(35deg);
-    border-bottom: 10px gray inset;
-    border-left: 5px gray inset;
-    transition: 0.5s;
-}
+} */
 
 #start-btn:hover, #next-btn:hover, #restart-btn:hover{
     margin-top: 7px;
@@ -189,6 +196,10 @@
 #correct:disabled, #false1:disabled, #false2:disabled, #false0:disabled{
     color: rgb(121, 111, 111);
 
+}
+#next-btn:disabled{
+    background: linear-gradient(rgba(128, 128, 128, 0.623), aliceblue,rgba(128, 128, 128, 0.623));
+    color: black;
 }
 
 #category{
